@@ -10,7 +10,6 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var cakeImageView: ImageView
 
-    private val coroutineScope = CoroutineScope(Dispatchers.Default)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,10 +18,12 @@ class MainActivity : AppCompatActivity() {
         cakeImageView = findViewById(R.id.imageView)
 
         findViewById<Button>(R.id.revealButton).setOnClickListener {
-            coroutineScope.launch {
+            CoroutineScope(Dispatchers.Default).launch {
                 repeat(100) {
-                    cakeImageView.alpha = it / 100f
-                    delay(40)
+                    withContext(Dispatchers.Main) {
+                        cakeImageView.alpha = it / 100f
+                        delay(40)
+                    }
                 }
             }
         }
